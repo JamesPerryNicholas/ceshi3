@@ -13,6 +13,11 @@ const tasks = [
     id: "task-3",
     title: "优化任务列表加载性能",
     description: "减少任务数量增加后列表加载所需的时间。"
+  },
+  {
+    id: "js",
+    title: "JavaScript 基础",
+    description: "掌握 JavaScript 的基础语法和常用开发方式。"
   }
 ];
 
@@ -22,13 +27,15 @@ const tasks = [
  * Empty (or whitespace-only) keywords return all tasks. Matching is a
  * case-insensitive substring search and never mutates the source array.
  *
- * @param {unknown} keyword
+ * @param {string|undefined} keyword
  * @returns {Array<object>}
  */
-function searchTasks(keyword) {
-  const normalizedKeyword = typeof keyword === "string"
-    ? keyword.trim().toLocaleLowerCase()
-    : "";
+function searchTasks(keyword = "") {
+  if (typeof keyword !== "string") {
+    throw new TypeError("keyword must be a string");
+  }
+
+  const normalizedKeyword = keyword.trim().toLocaleLowerCase();
 
   if (normalizedKeyword === "") {
     return tasks.slice();

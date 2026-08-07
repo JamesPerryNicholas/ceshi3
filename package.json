@@ -4,6 +4,76 @@
   "private": true,
   "type": "commonjs",
   "scripts": {
-    "test": "node --test"
+    "start": "node server.js",
+    "test": "node --test",
+    "test:acceptance": "node --test"
+  },
+  "engineeros": {
+    "healthCheckPath": "/health",
+    "apiScenarios": [
+      {
+        "name": "searchTasks complete keyword",
+        "criteria": ["完整关键词可搜索"],
+        "method": "GET",
+        "path": "/api/search?keyword=%E5%AE%9E%E7%8E%B0%E4%BB%BB%E5%8A%A1%E5%85%B3%E9%94%AE%E5%AD%97%E6%90%9C%E7%B4%A2",
+        "expected": {
+          "status": 200,
+          "body": [
+            { "id": "task-1" }
+          ]
+        }
+      },
+      {
+        "name": "searchTasks partial keyword",
+        "criteria": ["部分关键词可搜索"],
+        "method": "GET",
+        "path": "/api/search?keyword=%E4%BB%BB%E5%8A%A1",
+        "expected": {
+          "status": 200,
+          "body": [
+            { "id": "task-1" },
+            { "id": "task-2" },
+            { "id": "task-3" }
+          ]
+        }
+      },
+      {
+        "name": "searchTasks case-insensitive",
+        "criteria": ["大小写不影响结果"],
+        "method": "GET",
+        "path": "/api/search?keyword=JAVASCRIPT",
+        "expected": {
+          "status": 200,
+          "body": [
+            { "id": "js" }
+          ]
+        }
+      },
+      {
+        "name": "searchTasks empty keyword",
+        "criteria": ["空关键词行为正确"],
+        "method": "GET",
+        "path": "/api/search?keyword=",
+        "expected": {
+          "status": 200,
+          "body": [
+            { "id": "task-1" },
+            { "id": "task-2" },
+            { "id": "task-3" },
+            { "id": "js" }
+          ]
+        }
+      },
+      {
+        "name": "searchTasks no match",
+        "criteria": ["无结果场景测试通过"],
+        "method": "GET",
+        "path": "/api/search?keyword=%E4%B8%8D%E5%AD%98%E5%9C%A8%E7%9A%84%E4%BB%BB%E5%8A%A1",
+        "expected": {
+          "status": 200,
+          "body": []
+        }
+      }
+    ]
   }
 }
